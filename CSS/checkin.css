@@ -1,0 +1,137 @@
+/* checkin.css - Styles for the check-in page */
+
+.checkin-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+}
+
+.checkin-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.checkin-header h1 {
+    color: var(--primary-color);
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.date-display {
+    color: var(--text-light);
+    font-size: 18px;
+}
+
+.checkin-form {
+    margin-top: 20px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+}
+
+.autocomplete-dropdown.show {
+    display: block;
+}
+
+.autocomplete-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.autocomplete-item:hover {
+    background-color: #e8f4ff;
+}
+
+.shift-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.shift-btn {
+    padding: 20px;
+    border: 3px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+    transition: var(--transition);
+    text-align: center;
+}
+
+.shift-btn:hover {
+    border-color: var(--primary-color);
+    background-color: #e8f4ff;
+}
+
+.shift-btn.selected {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.check-in-btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 10px;
+}
+
+.check-in-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+}
+
+.check-in-btn:active {
+    transform: translateY(0);
+}
+
+.check-in-btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 600px) {
+    .checkin-container {
+        padding: 30px 20px;
+    }
+    
+    .shift-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .checkin-header h1 {
+        font-size: 28px;
+    }
+}
