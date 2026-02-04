@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Dashboard - Homes with Hope</title>
+    <link rel="stylesheet" href="../CSS/main.css">
+    <link rel="stylesheet" href="../CSS/dashboard.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="../images/logo.png" alt="Homes with Hope" class="header-logo">
+                <span class="site-title">Homes with Hope</span>
+            </div>
+            <nav class="main-nav">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="checkin.html" class="nav-link">Check In</a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="dashboard-header">
+            <h1>Volunteer Hours Dashboard</h1>
+            <div class="header-actions">
+                <button class="btn btn-export" onclick="exportData()">Export Data</button>
+                <button class="btn btn-print" onclick="window.open('signin-sheet.html', '_blank')">Print Sign-In Sheet</button>
+            </div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <div class="filter-item">
+                    <label for="filterDate">Filter by Date</label>
+                    <input type="date" id="filterDate">
+                </div>
+                <div class="filter-item">
+                    <label for="filterVolunteer">Filter by Volunteer</label>
+                    <select id="filterVolunteer">
+                        <option value="">All Volunteers</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label for="filterShift">Filter by Shift</label>
+                    <select id="filterShift">
+                        <option value="">All Shifts</option>
+                        <option value="morning">Morning</option>
+                        <option value="afternoon">Afternoon</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Check-ins</h3>
+                <div class="stat-number" id="totalCheckins">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Unique Volunteers</h3>
+                <div class="stat-number" id="uniqueVolunteers">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Morning Shifts</h3>
+                <div class="stat-number" id="morningShifts">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Afternoon Shifts</h3>
+                <div class="stat-number" id="afternoonShifts">0</div>
+            </div>
+        </div>
+        
+        <!-- Data Views -->
+        <div class="data-container">
+            <div class="view-tabs">
+                <button class="tab-btn active" onclick="switchView('byDate')">View by Date</button>
+                <button class="tab-btn" onclick="switchView('byVolunteer')">View by Volunteer</button>
+            </div>
+            
+            <div id="byDateView" class="data-view active">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Volunteer Name</th>
+                                <th>Shift</th>
+                                <th>Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dateTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="byVolunteerView" class="data-view">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Volunteer Name</th>
+                                <th>Total Hours</th>
+                                <th>Morning Shifts</th>
+                                <th>Afternoon Shifts</th>
+                                <th>Both Shifts</th>
+                                <th>Last Check-in</th>
+                            </tr>
+                        </thead>
+                        <tbody id="volunteerTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Homes with Hope Food Pantry</p>
+    </footer>
+    
+    <script src="../JS/storage.js"></script>
+    <script src="../JS/dashboard.js"></script>
+</body>
+</html>
