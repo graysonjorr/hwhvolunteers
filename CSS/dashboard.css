@@ -109,6 +109,7 @@
     display: block;
 }
 
+/* Status badge for volunteers still signed in */
 .badge {
     display: inline-block;
     padding: 4px 12px;
@@ -117,19 +118,9 @@
     font-weight: 600;
 }
 
-.badge-morning {
+.badge-open {
     background: #fff3cd;
     color: #856404;
-}
-
-.badge-afternoon {
-    background: #d1ecf1;
-    color: #0c5460;
-}
-
-.badge-both {
-    background: #d4edda;
-    color: #155724;
 }
 
 .delete-btn {
@@ -152,15 +143,15 @@
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .header-actions {
         flex-direction: column;
     }
-    
+
     .view-tabs {
         flex-direction: column;
     }
-    
+
     .filter-group {
         grid-template-columns: 1fr;
     }

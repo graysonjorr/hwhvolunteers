@@ -27,53 +27,47 @@
     <main class="main-content">
         <div class="checkin-container">
             <div class="checkin-header">
-                <h1>Volunteer Check-In</h1>
+                <h1>Volunteer Sign In / Out</h1>
                 <div class="date-display" id="dateDisplay"></div>
             </div>
-            
-            <div class="success-message" id="successMessage">
-                ✓ Thank you for checking in!
-            </div>
-            
-            <form id="checkinForm" class="checkin-form">
+
+            <div class="success-message" id="successMessage"></div>
+
+            <div class="checkin-form">
                 <div class="form-group">
                     <label for="volunteerName">Your Name</label>
                     <div class="input-wrapper">
-                        <input 
-                            type="text" 
-                            id="volunteerName" 
-                            placeholder="Start typing your name..." 
+                        <input
+                            type="text"
+                            id="volunteerName"
+                            placeholder="Start typing your name..."
                             autocomplete="off"
-                            required
                         >
                         <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Select Your Shift</label>
-                    <div class="shift-options">
-                        <button type="button" class="shift-btn" data-shift="morning">Morning</button>
-                        <button type="button" class="shift-btn" data-shift="afternoon">Afternoon</button>
-                        <button type="button" class="shift-btn" data-shift="both">Both</button>
-                    </div>
+
+                <!-- Status indicator -->
+                <div id="statusMessage" class="status-message"></div>
+
+                <!-- Sign In / Sign Out Buttons -->
+                <div class="action-buttons">
+                    <button type="button" id="signInBtn" class="action-btn sign-in-btn">
+                        Sign In
+                    </button>
+                    <button type="button" id="signOutBtn" class="action-btn sign-out-btn" disabled>
+                        Sign Out
+                    </button>
                 </div>
-                
-                <button type="submit" class="check-in-btn">Check In</button>
-            </form>
+            </div>
         </div>
     </main>
 
     <footer class="main-footer">
         <p>&copy; 2026 Homes with Hope Food Pantry</p>
     </footer>
-    
-<<<<<<< HEAD
+
     <script src="../JS/storage.js"></script>
     <script src="../JS/checkin.js"></script>
-=======
-    <script src="../js/storage.js"></script>
-    <script src="../js/checkin.js"></script>
->>>>>>> 587dd61f22f88547f9bde25d980b3a933c572711
 </body>
 </html>

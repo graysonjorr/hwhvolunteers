@@ -49,89 +49,96 @@
     box-shadow: var(--shadow-md);
 }
 
-.autocomplete-dropdown.show {
-    display: block;
-}
-
 .autocomplete-item {
     padding: 12px 15px;
     cursor: pointer;
     transition: var(--transition);
+    font-size: 16px;
 }
 
 .autocomplete-item:hover {
     background-color: #e8f4ff;
 }
 
-.shift-options {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-}
-
-.shift-btn {
-    padding: 20px;
-    border: 3px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background: white;
-    cursor: pointer;
-    font-size: 16px;
+/* Status message shown when volunteer is already signed in */
+.status-message {
+    min-height: 28px;
+    margin-bottom: 20px;
+    font-size: 15px;
     font-weight: 600;
-    color: var(--text-dark);
-    transition: var(--transition);
     text-align: center;
+    border-radius: 8px;
+    padding: 0;
+    transition: var(--transition);
 }
 
-.shift-btn:hover {
-    border-color: var(--primary-color);
-    background-color: #e8f4ff;
+.status-signed-in {
+    background: #e8f4ff;
+    color: var(--primary-color);
+    padding: 10px 15px;
 }
 
-.shift-btn.selected {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
+/* Sign In / Sign Out buttons side by side */
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
 }
 
-.check-in-btn {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
-    color: white;
+.action-btn {
+    padding: 22px 10px;
     border: none;
     border-radius: var(--border-radius);
     font-size: 20px;
     font-weight: 700;
     cursor: pointer;
     transition: var(--transition);
-    margin-top: 10px;
+    font-family: inherit;
 }
 
-.check-in-btn:hover {
+.sign-in-btn {
+    background: linear-gradient(135deg, var(--success-color) 0%, #1e8449 100%);
+    color: white;
+}
+
+.sign-in-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4);
+}
+
+.sign-out-btn {
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
+    color: white;
+}
+
+.sign-out-btn:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
 }
 
-.check-in-btn:active {
-    transform: translateY(0);
-}
-
-.check-in-btn:disabled {
+.action-btn:disabled {
     background: #bdc3c7;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
+    opacity: 0.6;
+}
+
+.action-btn:active:not(:disabled) {
+    transform: translateY(0);
 }
 
 @media (max-width: 600px) {
     .checkin-container {
         padding: 30px 20px;
     }
-    
-    .shift-options {
-        grid-template-columns: 1fr;
-    }
-    
+
     .checkin-header h1 {
-        font-size: 28px;
+        font-size: 26px;
+    }
+
+    .action-buttons {
+        grid-template-columns: 1fr;
     }
 }

@@ -28,11 +28,10 @@
         <div class="dashboard-header">
             <h1>Volunteer Hours Dashboard</h1>
             <div class="header-actions">
-                <button class="btn btn-export" onclick="exportData()">Export Data</button>
-                <button class="btn btn-print" onclick="window.open('signin-sheet.html', '_blank')">Print Sign-In Sheet</button>
+                <button class="btn btn-export" onclick="exportData()">⬇ Export to CSV</button>
             </div>
         </div>
-        
+
         <!-- Filters -->
         <div class="filters-section">
             <div class="filter-group">
@@ -47,45 +46,45 @@
                     </select>
                 </div>
                 <div class="filter-item">
-                    <label for="filterShift">Filter by Shift</label>
-                    <select id="filterShift">
-                        <option value="">All Shifts</option>
-                        <option value="morning">Morning</option>
-                        <option value="afternoon">Afternoon</option>
-                        <option value="both">Both</option>
+                    <label for="filterStatus">Filter by Status</label>
+                    <select id="filterStatus">
+                        <option value="">All</option>
+                        <option value="open">Still Signed In</option>
+                        <option value="complete">Completed</option>
                     </select>
                 </div>
             </div>
             <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
         </div>
-        
+
         <!-- Statistics -->
         <div class="stats-grid">
             <div class="stat-card">
-                <h3>Total Check-ins</h3>
-                <div class="stat-number" id="totalCheckins">0</div>
+                <h3>Total Sessions</h3>
+                <div class="stat-number" id="totalSessions">0</div>
             </div>
             <div class="stat-card">
                 <h3>Unique Volunteers</h3>
                 <div class="stat-number" id="uniqueVolunteers">0</div>
             </div>
             <div class="stat-card">
-                <h3>Morning Shifts</h3>
-                <div class="stat-number" id="morningShifts">0</div>
+                <h3>Still Signed In</h3>
+                <div class="stat-number" id="openSessions">0</div>
             </div>
             <div class="stat-card">
-                <h3>Afternoon Shifts</h3>
-                <div class="stat-number" id="afternoonShifts">0</div>
+                <h3>Total Hours</h3>
+                <div class="stat-number" id="totalHours">0</div>
             </div>
         </div>
-        
+
         <!-- Data Views -->
         <div class="data-container">
             <div class="view-tabs">
-                <button class="tab-btn active" onclick="switchView('byDate')">View by Date</button>
-                <button class="tab-btn" onclick="switchView('byVolunteer')">View by Volunteer</button>
+                <button class="tab-btn active" onclick="switchView('byDate')">All Sessions</button>
+                <button class="tab-btn" onclick="switchView('byVolunteer')">By Volunteer</button>
             </div>
-            
+
+            <!-- Session log -->
             <div id="byDateView" class="data-view active">
                 <div class="table-container">
                     <table>
@@ -93,27 +92,27 @@
                             <tr>
                                 <th>Date</th>
                                 <th>Volunteer Name</th>
-                                <th>Shift</th>
-                                <th>Time</th>
+                                <th>Sign In</th>
+                                <th>Sign Out</th>
+                                <th>Hours</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="dateTableBody"></tbody>
+                        <tbody id="sessionTableBody"></tbody>
                     </table>
                 </div>
             </div>
-            
+
+            <!-- Volunteer summary -->
             <div id="byVolunteerView" class="data-view">
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
                                 <th>Volunteer Name</th>
+                                <th>Sessions</th>
                                 <th>Total Hours</th>
-                                <th>Morning Shifts</th>
-                                <th>Afternoon Shifts</th>
-                                <th>Both Shifts</th>
-                                <th>Last Check-in</th>
+                                <th>Last Visit</th>
                             </tr>
                         </thead>
                         <tbody id="volunteerTableBody"></tbody>
@@ -126,13 +125,8 @@
     <footer class="main-footer">
         <p>&copy; 2026 Homes with Hope Food Pantry</p>
     </footer>
-    
-<<<<<<< HEAD
+
     <script src="../JS/storage.js"></script>
     <script src="../JS/dashboard.js"></script>
-=======
-    <script src="../js/storage.js"></script>
-    <script src="../js/dashboard.js"></script>
->>>>>>> 587dd61f22f88547f9bde25d980b3a933c572711
 </body>
 </html>

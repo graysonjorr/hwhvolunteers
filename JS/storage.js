@@ -1,19 +1,17 @@
 // storage.js - Handles all localStorage operations
 
 const Storage = {
-    // Keys for localStorage
     KEYS: {
         VOLUNTEERS: 'volunteers',
-        CHECKINS: 'checkins'
+        SESSIONS: 'sessions'
     },
 
-    // Initialize storage if not exists
     init() {
-        if (!this.getVolunteers()) {
+        if (!localStorage.getItem(this.KEYS.VOLUNTEERS)) {
             localStorage.setItem(this.KEYS.VOLUNTEERS, JSON.stringify([]));
         }
-        if (!this.getCheckins()) {
-            localStorage.setItem(this.KEYS.CHECKINS, JSON.stringify([]));
+        if (!localStorage.getItem(this.KEYS.SESSIONS)) {
+            localStorage.setItem(this.KEYS.SESSIONS, JSON.stringify([]));
         }
     },
 
@@ -22,7 +20,6 @@ const Storage = {
         try {
             return JSON.parse(localStorage.getItem(this.KEYS.VOLUNTEERS)) || [];
         } catch (e) {
-            console.error('Error reading volunteers:', e);
             return [];
         }
     },
@@ -36,107 +33,119 @@ const Storage = {
         }
     },
 
-    // Check-in operations
-    getCheckins() {
+    // Session operations
+    getSessions() {
         try {
-            return JSON.parse(localStorage.getItem(this.KEYS.CHECKINS)) || [];
+            return JSON.parse(localStorage.getItem(this.KEYS.SESSIONS)) || [];
         } catch (e) {
-            console.error('Error reading check-ins:', e);
             return [];
         }
     },
 
-    addCheckin(checkin) {
-        const checkins = this.getCheckins();
-        checkins.push({
+    // Find an open (not yet signed out) session for a volunteer today
+    getOpenSession(name) {
+        const today = new Date().toISOString().split('T')[0];
+        const sessions = this.getSessions();
+        return sessions.find(s => s.name === name && s.date === today && !s.timeOut) || null;
+    },
+
+    // Sign in - creates a new session
+    signIn(name) {
+        const sessions = this.getSessions();
+        const now = new Date();
+        sessions.push({
             id: Date.now(),
-            name: checkin.name,
-            shift: checkin.shift,
-            date: checkin.date,
-            timestamp: checkin.timestamp || new Date().toISOString()
+            name: name,
+            date: now.toISOString().split('T')[0],
+            timeIn: now.toISOString(),
+            timeOut: null
         });
-        localStorage.setItem(this.KEYS.CHECKINS, JSON.stringify(checkins));
-        
-        // Also add volunteer to list if new
-        this.addVolunteer(checkin.name);
+        localStorage.setItem(this.KEYS.SESSIONS, JSON.stringify(sessions));
+        this.addVolunteer(name);
+        return true;
     },
 
-    deleteCheckin(id) {
-        const checkins = this.getCheckins();
-        const filtered = checkins.filter(c => c.id !== id);
-        localStorage.setItem(this.KEYS.CHECKINS, JSON.stringify(filtered));
+    // Sign out - finds open session and closes it
+    signOut(name) {
+        const sessions = this.getSessions();
+        const today = new Date().toISOString().split('T')[0];
+        const idx = sessions.findIndex(s => s.name === name && s.date === today && !s.timeOut);
+        if (idx === -1) return false; // No open session found
+
+        sessions[idx].timeOut = new Date().toISOString();
+        localStorage.setItem(this.KEYS.SESSIONS, JSON.stringify(sessions));
+        return true;
     },
 
-    // Filter operations
-    getFilteredCheckins(filters = {}) {
-        let checkins = this.getCheckins();
-        
+    deleteSession(id) {
+        const sessions = this.getSessions();
+        localStorage.setItem(this.KEYS.SESSIONS, JSON.stringify(sessions.filter(s => s.id !== id)));
+    },
+
+    // Calculate hours between two ISO timestamps
+    calcHours(timeIn, timeOut) {
+        if (!timeIn || !timeOut) return null;
+        const diff = (new Date(timeOut) - new Date(timeIn)) / (1000 * 60 * 60);
+        return Math.round(diff * 100) / 100;
+    },
+
+    // Filter sessions
+    getFilteredSessions(filters = {}) {
+        let sessions = this.getSessions();
+
         if (filters.date) {
-            checkins = checkins.filter(c => c.date === filters.date);
+            sessions = sessions.filter(s => s.date === filters.date);
         }
-        
         if (filters.volunteer) {
-            checkins = checkins.filter(c => c.name === filters.volunteer);
+            sessions = sessions.filter(s => s.name === filters.volunteer);
         }
-        
-        if (filters.shift) {
-            checkins = checkins.filter(c => c.shift === filters.shift);
+        if (filters.status === 'open') {
+            sessions = sessions.filter(s => !s.timeOut);
+        } else if (filters.status === 'complete') {
+            sessions = sessions.filter(s => !!s.timeOut);
         }
-        
-        return checkins;
+
+        return sessions;
     },
 
     // Statistics
     getStats(filters = {}) {
-        const checkins = this.getFilteredCheckins(filters);
-        const uniqueVolunteers = new Set(checkins.map(c => c.name));
-        
-        let morningCount = 0;
-        let afternoonCount = 0;
-        
-        checkins.forEach(c => {
-            if (c.shift === 'morning') {
-                morningCount++;
-            } else if (c.shift === 'afternoon') {
-                afternoonCount++;
-            } else if (c.shift === 'both') {
-                morningCount++;
-                afternoonCount++;
-            }
-        });
-        
+        const sessions = this.getFilteredSessions(filters);
+        const uniqueVolunteers = new Set(sessions.map(s => s.name));
+        const completed = sessions.filter(s => s.timeOut);
+        const totalHours = completed.reduce((sum, s) => sum + (this.calcHours(s.timeIn, s.timeOut) || 0), 0);
+
         return {
-            totalCheckins: checkins.length,
+            totalSessions: sessions.length,
             uniqueVolunteers: uniqueVolunteers.size,
-            morningShifts: morningCount,
-            afternoonShifts: afternoonCount
+            completedSessions: completed.length,
+            openSessions: sessions.filter(s => !s.timeOut).length,
+            totalHours: Math.round(totalHours * 100) / 100
         };
     },
 
     // Export to CSV
     exportToCSV(filters = {}) {
-        const checkins = this.getFilteredCheckins(filters);
-        
-        if (checkins.length === 0) {
-            return null;
-        }
-        
-        let csv = 'Date,Volunteer Name,Shift,Time\n';
-        checkins.forEach(c => {
-            const date = new Date(c.timestamp);
-            const dateStr = date.toLocaleDateString();
-            const timeStr = date.toLocaleTimeString();
-            csv += `${dateStr},"${c.name}",${c.shift},${timeStr}\n`;
+        const sessions = this.getFilteredSessions(filters);
+        if (sessions.length === 0) return null;
+
+        let csv = 'Date,Volunteer Name,Sign In Time,Sign Out Time,Hours Worked\n';
+        sessions.sort((a, b) => new Date(a.timeIn) - new Date(b.timeIn));
+        sessions.forEach(s => {
+            const date = new Date(s.timeIn).toLocaleDateString();
+            const timeIn = new Date(s.timeIn).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+            const timeOut = s.timeOut ? new Date(s.timeOut).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) : '';
+            const hours = this.calcHours(s.timeIn, s.timeOut) ?? '';
+            csv += `${date},"${s.name}",${timeIn},${timeOut},${hours}\n`;
         });
-        
+
         return csv;
     },
 
-    // Clear all data (use with caution)
     clearAll() {
         if (confirm('Are you sure you want to delete ALL data? This cannot be undone!')) {
             localStorage.removeItem(this.KEYS.VOLUNTEERS);
-            localStorage.removeItem(this.KEYS.CHECKINS);
+            localStorage.removeItem(this.KEYS.SESSIONS);
             this.init();
             return true;
         }
@@ -144,5 +153,4 @@ const Storage = {
     }
 };
 
-// Initialize storage on load
 Storage.init();
